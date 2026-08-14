@@ -37,6 +37,24 @@ Compared to vanilla OPD (log-ratio reward), PowerOPD achieves:
 | Wall-clock training time | **−59.2%** |
 | Peak GPU memory | **−23.1%** |
 
+<div align="center">
+<img src="docs/figs/fig1_accuracy.png" width="55%">
+</div>
+
+### Why vanilla OPD fails: three reward pathologies
+
+The log-ratio reward `log p_T(o_t) − log p_S(o_t)` is unbounded by construction. We identify three resulting pathologies:
+
+- **(a) High variance / heavy negative tail** — reward values plummet to nearly −50, allowing single rare tokens to dominate gradient updates.
+- **(b) Early-position extremes** — massive reward magnitudes concentrate at early rollout positions, destabilizing the prefix distribution and causing cascading errors.
+- **(c) Persistent extremes throughout training** — these extreme values never decay, continuously injecting instability across the entire optimization process.
+
+Standard post-hoc fixes (clipping, tanh compression, z-score normalization) operate only after the distortion occurs and do not resolve the root cause. PowerOPD addresses this at the reward level by replacing the log-ratio with a natively bounded transformation.
+
+<div align="center">
+<img src="docs/figs/fig2_pathologies.png" width="90%">
+</div>
+
 ---
 
 ## ✨ Getting Started
