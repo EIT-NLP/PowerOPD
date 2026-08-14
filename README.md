@@ -17,14 +17,22 @@
 
 ## 📖 Overview
 
-On-policy distillation (OPD) trains a student model to imitate a teacher on the student's own generated trajectories. The standard log-ratio reward `log p_T(o_t) − log p_S(o_t)` is unbounded: it can be arbitrarily large when the student assigns near-zero probability to a token, causing training instability and high memory cost.
+On-policy distillation (OPD) trains a student model to imitate a teacher on the student's own generated trajectories. While widely adopted for its efficiency, the standard log-ratio reward `log p_T(o_t) − log p_S(o_t)` is unbounded by construction. We identify three resulting training pathologies:
 
-**PowerOPD** replaces the log-ratio reward with a **power-transformed** version:
+- **(a) High variance / heavy negative tail** — reward values plummet to nearly −50, allowing single rare tokens to dominate gradient updates.
+- **(b) Early-position extremes** — massive reward magnitudes concentrate at early rollout positions, destabilizing the prefix distribution and causing cascading errors.
+- **(c) Persistent extremes throughout training** — these extreme values never decay, continuously injecting instability across the entire optimization process.
+
+<div align="center">
+<img src="docs/figs/fig2_pathologies.png" width="90%">
+</div>
+
+Standard post-hoc fixes (clipping, tanh compression, z-score normalization) operate only after the distortion occurs and do not resolve the root cause. **PowerOPD** addresses this at the reward level by replacing the log-ratio with a natively bounded **power-transformed** reward:
 
 $$r_t^{(\alpha)} = p_T(o_t)^\alpha - p_S(o_t)^\alpha$$
 
 The power transformation has three key properties:
-- **Bounded**: rewards are clipped to `[−1, 1]` by construction, eliminating the instability from extreme log-ratios.
+- **Bounded**: rewards lie in `[−1, 1]` by construction, eliminating instability from extreme log-ratios.
 - **Sign-consistent**: the reward is positive when the teacher assigns higher probability than the student, and negative otherwise — same direction as log-ratio OPD.
 - **Recovers log-ratio in the limit**: as α → 0, `r_t^(α)` converges (after rescaling) to the standard log-ratio reward.
 
@@ -36,24 +44,6 @@ Compared to vanilla OPD (log-ratio reward), PowerOPD achieves:
 | Avg@8 (6 math benchmarks) | **+6.37** |
 | Wall-clock training time | **−59.2%** |
 | Peak GPU memory | **−23.1%** |
-
-<div align="center">
-<img src="docs/figs/fig1_accuracy.png" width="55%">
-</div>
-
-### Why vanilla OPD fails: three reward pathologies
-
-The log-ratio reward `log p_T(o_t) − log p_S(o_t)` is unbounded by construction. We identify three resulting pathologies:
-
-- **(a) High variance / heavy negative tail** — reward values plummet to nearly −50, allowing single rare tokens to dominate gradient updates.
-- **(b) Early-position extremes** — massive reward magnitudes concentrate at early rollout positions, destabilizing the prefix distribution and causing cascading errors.
-- **(c) Persistent extremes throughout training** — these extreme values never decay, continuously injecting instability across the entire optimization process.
-
-Standard post-hoc fixes (clipping, tanh compression, z-score normalization) operate only after the distortion occurs and do not resolve the root cause. PowerOPD addresses this at the reward level by replacing the log-ratio with a natively bounded transformation.
-
-<div align="center">
-<img src="docs/figs/fig2_pathologies.png" width="90%">
-</div>
 
 ---
 
