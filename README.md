@@ -1,8 +1,6 @@
 <div align="center">
 
-# PowerOPD
-
-**Stabilizing On-Policy Distillation with Bounded Power Transformation**
+# PowerOPD: Stabilizing On-Policy Distillation with Bounded Power Transformation
 
 [![arXiv](https://img.shields.io/badge/arXiv-2606.17199-b31b1b.svg)](https://arxiv.org/abs/2606.17199)
 [![GitHub](https://img.shields.io/badge/GitHub-EIT--NLP%2FPowerOPD-181717?logo=github)](https://github.com/EIT-NLP/PowerOPD)
@@ -82,7 +80,7 @@ Key hyperparameters (all overridable via environment variables):
 
 | Variable | Default | Description |
 |---|---|---|
-| `POWER_REWARD_ALPHA` | `0.4` | Power exponent α (larger = stronger compression) |
+| `POWER_REWARD_ALPHA` | `5` | Power exponent α (larger = stronger compression) |
 | `TOKEN_LOSS_NORMALIZATION` | `window_token_mean` | Loss normalization across tokens |
 | `TERMINAL_STOP_TARGET` | `mask` | How to handle the final stop token |
 | `MAX_STEPS` | `1500` | Total training steps |
@@ -111,8 +109,8 @@ Standard log-ratio OPD and other reward variants are provided for comparison:
 
 ```bash
 bash scripts/run_log_ratio.sh   # vanilla OPD (log-ratio reward)
-bash scripts/run_prob_diff.sh   # probability-difference reward
-bash scripts/run_sqrt_diff.sh   # square-root power reward (α = 0.5)
+bash scripts/run_log_clip.sh    # log-ratio with clipping
+bash scripts/run_log_tanh.sh    # log-ratio with tanh normalization
 ```
 
 ### Experiment Tracking
@@ -142,7 +140,10 @@ Training and evaluation data are included under `data/`:
 
 ## 📨 Contact
 
-For questions about the paper or codebase, open an issue or contact the authors via the arXiv paper page.
+For questions about the paper or codebase, open an issue or reach the authors directly:
+
+- Anhao Zhao: anhao.zhao@connect.polyu.hk
+- Xiaoyu Shen: xyshen@eitech.edu.cn
 
 ---
 
