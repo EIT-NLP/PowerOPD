@@ -1,0 +1,13 @@
+experiments/
+swanlog/
+tmp*/
+*.pt
+*.bin
+*.safetensors
+*.ckpt
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+models/
+experiments/
