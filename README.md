@@ -81,7 +81,7 @@ export TEACHER_MODEL=/path/to/teacher
 **PowerOPD** (recommended):
 
 ```bash
-bash scripts/run_power_diff.sh
+bash scripts/run_poweropd.sh
 ```
 
 Key hyperparameters (all overridable via environment variables):
@@ -102,13 +102,13 @@ Key hyperparameters (all overridable via environment variables):
 POWER_REWARD_ALPHA=1.0 \
 STUDENT_MODEL=/path/to/student \
 TEACHER_MODEL=/path/to/teacher \
-bash scripts/run_power_diff.sh
+bash scripts/run_poweropd.sh
 ```
 
 **Teacher quantization** (reduces GPU memory for large teachers):
 
 ```bash
-TEACHER_QUANT_MODE=4bit bash scripts/run_power_diff_teacher_quant.sh
+TEACHER_QUANT_MODE=4bit bash scripts/run_poweropd_teacher_quant.sh
 ```
 
 ### Baseline Comparisons
@@ -132,7 +132,7 @@ export SWANLAB_API_KEY=your_api_key
 To disable tracking:
 
 ```bash
-REPORT_TO=none bash scripts/run_power_diff.sh
+REPORT_TO=none bash scripts/run_poweropd.sh
 ```
 
 ---
